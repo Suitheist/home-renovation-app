@@ -1,0 +1,64 @@
+# Home Renovation App - Cursor Rules
+
+## Project Context
+- MVP home renovation planning app
+- Target launch: April 2026
+- Stack: React, TypeScript, Tailwind, Airtable → PostgreSQL
+- Mobile-first, offline-first design
+
+## Code Style
+- TypeScript strict mode enabled
+- Functional components only, no class components
+- Use React hooks (useState, useEffect, useContext, custom hooks)
+- TailwindCSS for styling, no inline styles
+- Max 200 lines per component file
+- Descriptive variable names (no single letters except i, j in loops)
+
+## Architecture Rules
+- Components go in /src/components/[feature]/[ComponentName].tsx
+- Custom hooks go in /src/hooks/use[HookName].ts
+- API calls go in /src/api/[resource].ts
+- Types go in /src/types/[domain].ts
+- Utils go in /src/utils/[utilName].ts
+
+## AI Features
+- Always provide loading states for AI operations
+- Always provide fallback if AI fails
+- Let users edit AI suggestions
+- Explain AI reasoning when relevant
+
+## Mobile & Offline
+- All components must be mobile-responsive
+- Touch targets min 44x44px
+- Core features must work offline
+- Use service workers for offline caching
+
+## Performance
+- Lazy load routes and heavy components
+- Optimize images before upload
+- Debounce user inputs
+- Minimize re-renders
+
+## Security
+- Never commit API keys or secrets
+- Validate all user inputs
+- Sanitize data before rendering
+- Use environment variables for config
+
+## Error Handling
+- Wrap components in ErrorBoundary
+- Show user-friendly error messages
+- Log errors for debugging
+- Provide retry mechanisms
+
+## Testing
+- Write tests for business logic
+- Test critical user flows
+- Test error scenarios
+- Aim for 80%+ coverage
+
+## Constraints
+- Keep dependencies minimal
+- Avoid over-engineering for MVP
+- Prioritize shipping over perfection
+- Can refactor after user feedback

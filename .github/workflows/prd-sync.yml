@@ -1,0 +1,95 @@
+name: PRD Sync Check
+
+on:
+  schedule:
+    # Check for PRD updates every 6 hours
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+    inputs:
+      force_sync:
+        description: 'Force sync even if no updates detected'
+        required: false
+        default: 'false'
+        type: boolean
+
+jobs:
+  prd-sync-check:
+    name: PRD Sync Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Check for PRD updates
+        id: prd-check
+        run: |
+          echo "Checking for PRD updates..."
+          npm run check-prd
+          
+          # Check if updates are available
+          if [ "${{ github.event.inputs.force_sync }}" == "true" ]; then
+            echo "Force sync requested"
+            echo "updates_available=true" >> $GITHUB_OUTPUT
+          else
+            # This would need to be implemented in the check script
+            echo "updates_available=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          NOTION_PRD_PAGE_ID: ${{ secrets.NOTION_PRD_PAGE_ID }}
+          
+      - name: Sync PRD if updates available
+        if: steps.prd-check.outputs.updates_available == 'true'
+        run: |
+          echo "Syncing PRD from Notion..."
+          npm run sync-prd
+        env:
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          NOTION_PRD_PAGE_ID: ${{ secrets.NOTION_PRD_PAGE_ID }}
+          
+      - name: Commit and push changes
+        if: steps.prd-check.outputs.updates_available == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          git add PRD.md .prd-sync.json
+          git commit -m "🤖 Auto-sync PRD from Notion [skip ci]"
+          git push
+          
+      - name: Create PR if updates available
+        if: steps.prd-check.outputs.updates_available == 'true'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "🤖 Auto-sync PRD from Notion"
+          title: "🤖 Auto-sync: PRD updated from Notion"
+          body: |
+            ## PRD Auto-Sync
+            
+            This PR was automatically created because the PRD in Notion has been updated.
+            
+            ### Changes:
+            - Updated PRD.md with latest content from Notion
+            - Updated sync metadata in .prd-sync.json
+            
+            ### Review:
+            - [ ] Review the PRD changes
+            - [ ] Ensure no breaking changes to development
+            - [ ] Update any affected documentation
+            
+            ### Next Steps:
+            - Merge this PR to update the main branch
+            - Notify the development team of significant changes
+          branch: auto-sync/prd-update-${{ github.run_number }}
+          delete-branch: true

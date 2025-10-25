@@ -1,0 +1,28 @@
+# Global code owners
+* @tobyrigby
+
+# PRD and documentation
+PRD.md @tobyrigby
+.cursor/rules @tobyrigby
+README.md @tobyrigby
+
+# Core application files
+src/app/ @tobyrigby
+src/components/ @tobyrigby
+src/lib/ @tobyrigby
+src/types/ @tobyrigby
+
+# Configuration files
+package.json @tobyrigby
+tsconfig.json @tobyrigby
+tailwind.config.js @tobyrigby
+next.config.js @tobyrigby
+
+# GitHub workflows
+.github/workflows/ @tobyrigby
+.github/ISSUE_TEMPLATE/ @tobyrigby
+.github/pull_request_template.md @tobyrigby
+
+# Environment and secrets
+env.example @tobyrigby
+.env.local @tobyrigby
