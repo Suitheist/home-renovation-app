@@ -9,6 +9,7 @@ This is the MVP for an AI-powered home renovation planning app, built with Next.
 - **Mobile-First**: Responsive design optimized for mobile devices
 - **Offline-First**: Core features work without internet connection
 - **Real-Time Updates**: Live sync with Notion and Airtable
+- **Usage Tracking**: Monitor API usage and limits for all integrated services
 
 ## 📁 Project Structure
 
@@ -124,6 +125,22 @@ Refer to the `PRD.md` and `.cursor/rules` files for detailed development guideli
 - **AI-Augmented**: Provide loading states and fallbacks for AI features
 - **Type Safety**: Use TypeScript strict mode
 - **Performance**: Lazy load routes and optimize images
+
+## 📊 Checking API Usage
+
+To check your remaining API usage for OpenAI, Airtable, and Notion:
+
+```bash
+npm run check-usage
+```
+
+This will show you:
+- Which services are configured
+- Rate limits for each service
+- Links to usage dashboards
+- Configuration status
+
+See [USAGE_TRACKING.md](USAGE_TRACKING.md) for detailed information about API limits and costs.
 
 ## 🚀 Next Steps
 
